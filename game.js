@@ -1,6 +1,7 @@
 var origBoard;
 const huPlayer = 'O';
 const aiPlayer = 'X';
+// winCombos checks for the following winning combinations 
 const winCombos = [
   [0, 1, 2],
   [3, 4, 5],
@@ -66,19 +67,23 @@ function gameOver(gameWon) {
   declareWinner(gameWon.player == huPlayer ? "You win!" : "You lose.");
 }
 
+//identifies winner of game 
 function declareWinner(who) {
   document.querySelector(".endgame").style.display = "block";
   document.querySelector(".endgame .text").innerText = who;
 }
 
+//this returns board back to original state
 function emptySquares() {
   return origBoard.filter(s => typeof s == 'number');
 }
+
 
 function bestSpot() {
   return minimax(origBoard, aiPlayer).index;
 }
 
+//check to see if theres a tied game or not 
 function checkTie() {
   if (emptySquares().length == 0) {
     for (var i = 0; i < cells.length; i++) {
@@ -112,14 +117,21 @@ function minimax(newBoard, player) {
     var move = {};
     move.index = newBoard[availSpots[i]];
     newBoard[availSpots[i]] = player;
+    
 
     if (player == aiPlayer) {
       var result = minimax(newBoard, huPlayer);
       move.score = result.score;
+     
     } else {
       var result = minimax(newBoard, aiPlayer);
       move.score = result.score;
+      
+     
     }
+
+    myVar = setTimeout(minimax, 9000);
+      clearTimeout(myVar);
 
     newBoard[availSpots[i]] = move.index;
 
