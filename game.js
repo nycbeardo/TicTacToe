@@ -1,6 +1,8 @@
 var origBoard;
-const huPlayer = 'O';
-const aiPlayer = 'X';
+const aiPlayer = 'O';
+const huPlayer = 'X';
+
+
 // winCombos checks for the following winning combinations 
 const winCombos = [
   [0, 1, 2],
@@ -15,6 +17,9 @@ const winCombos = [
 
 const cells = document.querySelectorAll('.cell');
 startGame();
+
+
+//this function allows the game to start and sets up parameters for the board 
 
 function startGame() {
   document.querySelector(".endgame").style.display = "none";
@@ -56,6 +61,7 @@ function checkWin(board, player) {
   return gameWon;
 }
 
+//this detemines behavior and output when winner is chosen
 function gameOver(gameWon) {
   for (let index of winCombos[gameWon.index]) {
     document.getElementById(index).style.backgroundColor =
@@ -96,28 +102,41 @@ function checkTie() {
   return false;
 }
 
-function minimax(newBoard, player) {
+
+//main minimax function 
+
+function minimax(newBoard, player) 
+{
+
+  //checks for next two empty spots
   var availSpots = emptySquares();
 
+
+  // return value if terminal state is found
   if (checkWin(newBoard, huPlayer)) {
     return {
-      score: -10
+      score: -10 //assigned value
     };
   } else if (checkWin(newBoard, aiPlayer)) {
     return {
-      score: 10
+      score: 20 //assigned value
     };
-  } else if (availSpots.length === 0) {
+  } else if (availSpots.length === 0) {     //when theres no more spots, returns a tie = 0
     return {
       score: 0
     };
   }
+
+
+  //recursion
+  //collect moves and scores for each player
   var moves = [];
   for (var i = 0; i < availSpots.length; i++) {
     var move = {};
     move.index = newBoard[availSpots[i]];
     newBoard[availSpots[i]] = player;
-    
+
+  //when next player turn minimax is called again 
 
     if (player == aiPlayer) {
       var result = minimax(newBoard, huPlayer);
@@ -130,11 +149,15 @@ function minimax(newBoard, player) {
      
     }
 
-    myVar = setTimeout(minimax, 9000);
+    //sets time delay for huPlayer and aiPlayer
+    myVar = setTimeout(minimax, 4000);
       clearTimeout(myVar);
 
+
+      //resets board
     newBoard[availSpots[i]] = move.index;
 
+// pushes moves object to move array
     moves.push(move);
   }
 
@@ -157,5 +180,6 @@ function minimax(newBoard, player) {
     }
   }
 
+  // return the players chosen move (object) from the array
   return moves[bestMove];
 }
